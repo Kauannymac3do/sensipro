@@ -1,0 +1,16 @@
+{
+  "short_name": "SensiG23",
+  "name": "Gerador de Sensi Moto G23",
+  "icons": [
+    {
+      "src": "https://flaticon.com",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/index.html",
+  "background_color": "#121212",
+  "theme_color": "#ff4500",
+  "display": "standalone",
+  "orientation": "portrait"
+}
