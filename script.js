@@ -1,20 +1,3 @@
-function iniciarCalibracaoIA() {
-    var celular = document.getElementById('nome_celular').value;
-    if (celular.trim() === "") {
-        alert("Por favor, digite o modelo do seu celular para começar!");
-        return;
-    }
-
-    document.getElementById('resultado').style.display = 'none';
-    document.getElementById('carregando').style.display = 'block';
-
-    setTimeout(() => { document.getElementById('texto_ia').innerText = "Processando DPI e taxa de atualização..."; }, 800);
-    setTimeout(() => { document.getElementById('texto_ia').innerText = "Ajustando latência do servidor regional..."; }, 1600);
-    setTimeout(() => { document.getElementById('texto_ia').innerText = "Calibrando diâmetro do botão de disparo..."; }, 2400);
-    
-    setTimeout(processarDadosIA, 3200);
-}
-
 function processarDadosIA() {
     document.getElementById('carregando').style.display = 'none';
 
@@ -24,83 +7,98 @@ function processarDadosIA() {
     var problema = document.getElementById('problema_mira').value;
     var regiao = document.getElementById('regiao').value;
     var tela = document.getElementById('tela_tamanho').value;
+    var aceitaDpi = document.getElementById('aceita_dpi').value;
 
-    // Valores iniciais equilibrados
-    var geral = 125, reddot = 92, m2x = 132, m4x = 128, botao = 45, dpi = 600, latenciaMsg = "Otimizado";
+    // NOVO: Valores iniciais equilibrados pensando no limite de 200
+    var geral = 145, reddot = 138, m2x = 142, m4x = 140, botao = 45, dpi = 600, latenciaMsg = "Otimizado";
 
     // 1. Ajuste de Tela (Cálculo do botão de tiro)
     if (tela === "pequena") {
         botao = 39; 
-        geral += 5; // Menos espaço físico exige mais sensibilidade por milímetro movido
+        geral += 10; // Escala aumentada para o limite de 200
     } else if (tela === "grande") {
         botao = 52; 
-        geral -= 5; 
+        geral -= 10; 
     }
 
-    // 2. Ajuste por Memória RAM (Telas de celulares mais fracos precisam de mais velocidade)
+    // 2. Ajuste por Memória RAM
     if (ram === "baixa") {
-        geral += 20; m2x += 15; dpi = 711;
+        geral += 15; m2x += 12; dpi = 680;
     } else if (ram === "alta") {
-        geral -= 10; m2x -= 5; dpi = 510;
+        geral -= 8; m2x -= 6; dpi = 510;
     }
 
     // 3. Ajuste por Desempenho
     if (desempenho === "trava") {
-        geral += 12;
+        geral += 10;
         botao -= 2; 
     }
 
     // 4. Correção de Erro de Mira do jogador
     if (problema === "peito") {
-        geral += 10; reddot += 5;
+        geral += 15; reddot += 10;
         botao -= 3; 
     } else if (problema === "passa") {
-        geral -= 12; m2x -= 6;
-        dpi = Math.floor(dpi * 0.88); // Diminui a DPI ligeiramente para segurar o tiro na cabeça
+        geral -= 15; m2x -= 10;
+        dpi = Math.floor(dpi * 0.88);
     } else if (problema === "pina") {
-        reddot -= 8; m4x -= 10;
-        botao += 4; // Botão maior estabiliza as miras para não tremer
+        reddot -= 12; m4x -= 12;
+        botao += 4;
     }
 
     // 5. Ajuste por Região do Servidor
     if (regiao === "br") {
         latenciaMsg = "Ping Estável (0-30ms) | Foco em Precisão";
     } else if (regiao === "latam") {
-        geral += 3;
+        geral += 5;
         latenciaMsg = "Ping Médio (40-80ms) | Sensi aumentada";
     } else {
-        geral += 6; reddot += 4;
-        latenciaMsg = "Ping Alto (90ms+) | Registro de tiro acelerado";
+        geral += 8; reddot += 5;
+        latenciaMsg = "Ping Alto (90ms+) | Registro acelerado";
     }
 
     // Margem dinâmica para gerar números ligeiramente diferentes a cada clique
-    var randomVal = () => Math.floor(Math.random() * 5) - 2;
+    var randomVal = () => Math.floor(Math.random() * 6) - 3;
 
-    // Colocar os resultados nas tags correspondentes do HTML
+    // MODIFICADO: Agora o limite máximo vai até 200!
+    var limitarSensi = (valor) => Math.min(200, Math.max(0, valor + randomVal()));
+
+    // Colocar os resultados nas tags do HTML
     document.getElementById('celular_detectado').innerText = celular.toUpperCase();
-    document.getElementById('geral_val').innerText = Math.min(200, geral + randomVal());
-    document.getElementById('reddot_val').innerText = Math.min(200, reddot + randomVal());
-    document.getElementById('mira2x_val').innerText = Math.min(200, m2x + randomVal());
-    document.getElementById('mira4x_val').innerText = Math.min(200, m4x + randomVal());
+    document.getElementById('geral_val').innerText = limitarSensi(geral);
+    document.getElementById('reddot_val').innerText = limitarSensi(reddot);
+    document.getElementById('mira2x_val').innerText = limitarSensi(m2x);
+    document.getElementById('mira4x_val').innerText = limitarSensi(m4x);
     document.getElementById('botao_val').innerText = botao + "%";
-    document.getElementById('dpi_res').innerText = dpi + " DPI";
     document.getElementById('latencia_val').innerText = latenciaMsg;
 
+    // Lógica do celular sem DPI
+    var dpiRes = document.getElementById('dpi_res');
+    var ponteiroVal = document.getElementById('ponteiro_val');
+    var listaInstrucoes = document.getElementById('lista_instrucoes');
+
+    if (aceitaDpi === "nao") {
+        dpiRes.innerText = "DPI Padrão do Aparelho";
+        dpiRes.style.color = "#ffaa00";
+        ponteiroVal.innerText = "Máxima + Velocidade de Rolagem Rápida";
+
+        listaInstrucoes.innerHTML = `
+            <li>Mantenha a <strong>DPI Padrão</strong> para não forçar o sistema do seu aparelho.</li>
+            <li>Vá em Acessibilidade > Visual > <strong>Tamanho da Fonte</strong> e coloque no MÍNIMO.</li>
+            <li>Ative o recurso <strong>"Remover Animações"</strong> para cliques mais instantâneos.</li>
+            <li>Se for Samsung/Motorola: Ative a <strong>Sensibilidade do Toque</strong> nas configs de tela.</li>
+        `;
+    } else {
+        dpiRes.innerText = dpi + " DPI";
+        dpiRes.style.color = "#00f260";
+        ponteiroVal.innerText = "Ativar no Máximo";
+
+        listaInstrucoes.innerHTML = `
+            <li>Vá em Configurações > Sistema > Opções do Desenvolvedor.</li>
+            <li>Procure por <strong>"Menor Largura"</strong> e coloque a DPI gerada.</li>
+            <li>Em Configurações > Tela, force a taxa em <strong>90Hz</strong>.</li>
+        `;
+    }
+
     document.getElementById('resultado').style.display = 'block';
-}
-
-function copiarConfig() {
-    var cel = document.getElementById('celular_detectado').innerText;
-    var geral = document.getElementById('geral_val').innerText;
-    var reddot = document.getElementById('reddot_val').innerText;
-    var m2x = document.getElementById('mira2x_val').innerText;
-    var m4x = document.getElementById('mira4x_val').innerText;
-    var botao = document.getElementById('botao_val').innerText;
-    var dpi = document.getElementById('dpi_res').innerText;
-
-    var texto = `🎯 SENSIPRO IA\n📱 Aparelho: ${cel}\n• Geral: ${geral}\n• Red Dot: ${reddot}\n• Mira 2x: ${m2x}\n• Mira 4x: ${m4x}\n• Botão Calculado: ${botao}\n• Config. Sistema: ${dpi}`;
-    
-    navigator.clipboard.writeText(texto).then(() => {
-        alert("Configuração copiada para a área de transferência!");
-    });
 }

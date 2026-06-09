@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SensiPro - IA Headshot</title>
+    <title>SensiPro - Headshot</title>
     <link rel="stylesheet" href="estilo.css">
 </head>
 <body>
 
     <div class="container">
-        <h2>🎯 SensiPro IA</h2>
+        <h2>🎯 SensiPro</h2>
         <p class="subtitulo">Insira os dados do seu aparelho para calibrar a mira</p>
         
         <div class="campo-grupo">
-            <label>Nome do Celular:</label>
+            <label for="nome_celular">Nome do Celular:</label>
             <input type="text" id="nome_celular" placeholder="Ex: Moto G23, Galaxy A54...">
         </div>
 
         <div class="campo-grupo">
-            <label>Região do Servidor:</label>
+            <label for="regiao">Região do Servidor:</label>
             <select id="regiao">
                 <option value="br">Brasil (Ping Baixo/Competitivo)</option>
                 <option value="latam">LATAM (Espanhol)</option>
@@ -27,7 +27,7 @@
         </div>
 
         <div class="campo-grupo">
-            <label>Tamanho da Tela do Celular:</label>
+            <label for="tela_tamanho">Tamanho da Tela do Celular:</label>
             <select id="tela_tamanho">
                 <option value="pequena">Tela Pequena (Menos de 6.1" polegadas)</option>
                 <option value="media">Tela Padrão (6.2" a 6.5" polegadas - Ex: Moto G23)</option>
@@ -36,7 +36,15 @@
         </div>
 
         <div class="campo-grupo">
-            <label>Memória RAM do Aparelho:</label>
+            <label for="aceita_dpi">Seu celular aceita mudar DPI (Menor Largura)?</label>
+            <select id="aceita_dpi">
+                <option value="sim">Sim, consigo alterar a DPI normalmente</option>
+                <option value="nao">Não / Não sei mudar (Celular Comum / iPhone)</option>
+            </select>
+        </div>
+
+        <div class="campo-grupo">
+            <label for="ram">Memória RAM do Aparelho:</label>
             <select id="ram">
                 <option value="baixa">2GB a 4GB RAM (Celular Intermediário/Entrada)</option>
                 <option value="media">6GB a 8GB RAM (Celular Bom/Gamer)</option>
@@ -45,7 +53,7 @@
         </div>
 
         <div class="campo-grupo">
-            <label>Desempenho no Free Fire:</label>
+            <label for="desempenho">Desempenho no Jogo:</label>
             <select id="desempenho">
                 <option value="trava">Dá uns engasgos / Trava um pouco</option>
                 <option value="liso">Roda Liso (Gráfico Padrão/Ultra)</option>
@@ -53,7 +61,7 @@
         </div>
 
         <div class="campo-grupo">
-            <label>Como está sua mira atualmente?</label>
+            <label for="problema_mira">Como está sua mira atualmente?</label>
             <select id="problema_mira">
                 <option value="peito">Gruda muito no Peito</option>
                 <option value="passa">Passa muito da Cabeça</option>
@@ -63,13 +71,12 @@
         
         <button onclick="iniciarCalibracaoIA()">Calcular Sensibilidade</button>
 
-        <!-- Tela de Carregamento -->
-        <div id="carregando" class="status-ia" style="display:none;">
+        <div id="carregando" class="status-ia" style="display: none;">
             <div class="spinner"></div>
             <p id="texto_ia">Analisando hardware do dispositivo...</p>
         </div>
 
-         <div id="resultado" class="resultado" style="display:none;">
+        <div id="resultado" class="resultado" style="display: none;">
             <h3>⚡ Sensi Calibrada para: <span id="celular_detectado" style="color:#45f3ff;">--</span></h3>
             <p>Geral: <span id="geral_val">--</span></p>
             <p>Ponto Vermelho: <span id="reddot_val">--</span></p>
@@ -78,16 +85,15 @@
             <p>Botão de Disparo: <span id="botao_val">--</span></p>
 
             <h3>⚙️ Modificações do Sistema:</h3>
-            <p>DPI Recomendada: <span id="dpi_res" style="color: #00f260;">--</span></p>
-            <p>Velocidade do Ponteiro: <span>Ativar no Máximo</span></p>
+            <p id="bloco_dpi">Configuração de Tela: <span id="dpi_res" style="color: #00f260;">--</span></p>
+            <p id="bloco_ponteiro">Velocidade do Ponteiro: <span id="ponteiro_val" style="color: #ffffff;">Ativar no Máximo</span></p>
             <p>Ajuste de Latência (Região): <span id="latencia_val" style="color: #ffaa00;">--</span></p>
             
             <button class="btn-copiar" onclick="copiarConfig()">📋 Copiar Configuração</button>
 
-            <!-- 📄 NOVO: Painel de Instruções e Dicas de Ajuste -->
             <div class="Dicas-gamer">
-                <h4>🛠️ COMO ATIVAR NO ANDROID:</h4>
-                <ul>
+                <h4>🛠️ COMO ATIVAR NO SISTEMA:</h4>
+                <ul id="lista_instrucoes">
                     <li>Vá em Configurações > Sistema > Opções do Desenvolvedor.</li>
                     <li>Procure por <strong>"Menor Largura"</strong> e coloque a DPI gerada.</li>
                     <li>Em Configurações > Tela, force a taxa em <strong>90Hz</strong>.</li>
