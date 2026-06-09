@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SensiPro - Headshot</title>
+    <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+
+    <div class="container">
+        <h2>🎯 SensiPro</h2>
+        <p class="subtitulo">Insira os dados do seu aparelho para calibrar a mira</p>
+        
+        <div class="campo-grupo">
+            <label for="nome_celular">Nome do Celular:</label>
+            <input type="text" id="nome_celular" placeholder="Ex: Moto G23, Galaxy A54...">
+        </div>
+
+        <div class="campo-grupo">
+            <label for="regiao">Região do Servidor:</label>
+            <select id="regiao">
+                <option value="br">Brasil (Ping Baixo/Competitivo)</option>
+                <option value="latam">LATAM (Espanhol)</option>
+                <option value="usa">Estados Unidos / América do Norte</option>
+            </select>
+        </div>
+
+        <div class="campo-grupo">
+            <label for="tela_tamanho">Tamanho da Tela do Celular:</label>
+            <select id="tela_tamanho">
+                <option value="pequena">Tela Pequena (Menos de 6.1" polegadas)</option>
+                <option value="media">Tela Padrão (6.2" a 6.5" polegadas - Ex: Moto G23)</option>
+                <option value="grande">Tela Gigante / Tablet (Mais de 6.6" polegadas)</option>
+            </select>
+        </div>
+
+        <div class="campo-grupo">
+            <label for="aceita_dpi">Seu celular aceita mudar DPI (Menor Largura)?</label>
+            <select id="aceita_dpi">
+                <option value="sim">Sim, consigo alterar a DPI normalmente</option>
+                <option value="nao">Não / Não sei mudar (Celular Comum / iPhone)</option>
+            </select>
+        </div>
+
+        <div class="campo-grupo">
+            <label for="ram">Memória RAM do Aparelho:</label>
+            <select id="ram">
+                <option value="baixa">2GB a 4GB RAM (Celular Intermediário/Entrada)</option>
+                <option value="media">6GB a 8GB RAM (Celular Bom/Gamer)</option>
+                <option value="alta">12GB RAM ou mais (Premium/Top de Linha)</option>
+            </select>
+        </div>
+
+        <div class="campo-grupo">
+            <label for="desempenho">Desempenho no Jogo:</label>
+            <select id="desempenho">
+                <option value="trava">Dá uns engasgos / Trava um pouco</option>
+                <option value="liso">Roda Liso (Gráfico Padrão/Ultra)</option>
+            </select>
+        </div>
+
+        <div class="campo-grupo">
+            <label for="problema_mira">Como está sua mira atualmente?</label>
+            <select id="problema_mira">
+                <option value="peito">Gruda muito no Peito</option>
+                <option value="passa">Passa muito da Cabeça</option>
+                <option value="pina">Treme / Pina muito tiro</option>
+            </select>
+        </div>
+        
+        <button onclick="iniciarCalibracaoIA()">Calcular Sensibilidade</button>
+
+        <div id="carregando" class="status-ia" style="display: none;">
+            <div class="spinner"></div>
+            <p id="texto_ia">Analisando hardware do dispositivo...</p>
+        </div>
+
+        <div id="resultado" class="resultado" style="display: none;">
+            <h3>⚡ Sensi Calibrada para: <span id="celular_detectado" style="color:#45f3ff;">--</span></h3>
+            <p>Geral: <span id="geral_val">--</span></p>
+            <p>Ponto Vermelho: <span id="reddot_val">--</span></p>
+            <p>Mira 2x: <span id="mira2x_val">--</span></p>
+            <p>Mira 4x: <span id="mira4x_val">--</span></p>
+            <p>Botão de Disparo: <span id="botao_val">--</span></p>
+
+            <h3>⚙️ Modificações do Sistema:</h3>
+            <p id="bloco_dpi">Configuração de Tela: <span id="dpi_res" style="color: #00f260;">--</span></p>
+            <p id="bloco_ponteiro">Velocidade do Ponteiro: <span id="ponteiro_val" style="color: #ffffff;">Ativar no Máximo</span></p>
+            <p>Ajuste de Latência (Região): <span id="latencia_val" style="color: #ffaa00;">--</span></p>
+            
+            <button class="btn-copiar" onclick="copiarConfig()">📋 Copiar Configuração</button>
+
+            <div class="Dicas-gamer">
+                <h4>🛠️ COMO ATIVAR NO SISTEMA:</h4>
+                <ul id="lista_instrucoes">
+                    <li>Vá em Configurações > Sistema > Opções do Desenvolvedor.</li>
+                    <li>Procure por <strong>"Menor Largura"</strong> e coloque a DPI gerada.</li>
+                    <li>Em Configurações > Tela, force a taxa em <strong>90Hz</strong>.</li>
+                </ul>
+                <h4>💡 AJUSTE FINO CASO PINAR:</h4>
+                <p class="txt-aviso">🚨 Se a mira PASSAR da cabeça: Abaixe a Geral em 2 pontos.</p>
+                <p class="txt-aviso">🚨 Se a mira GRUDAR no peito: Aumente a Geral em 2 pontos.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
